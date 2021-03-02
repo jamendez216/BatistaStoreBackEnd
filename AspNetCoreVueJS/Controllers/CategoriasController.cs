@@ -53,9 +53,6 @@ namespace AspNetCoreVueJS.Controllers
             return View();
         }
 
-        // POST: Categorias/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("idcategoria,Name,Description,Condition")] CCategoria cCategoria)
@@ -86,10 +83,7 @@ namespace AspNetCoreVueJS.Controllers
         }
 
         // POST: Categorias/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Edit(int id, [Bind("idcategoria,Name,Description,Condition")] CCategoria cCategoria)
         {
             if (id != cCategoria.idcategoria)
