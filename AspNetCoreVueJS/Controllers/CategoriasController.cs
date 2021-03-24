@@ -31,7 +31,7 @@ namespace AspNetCoreVueJS.Controllers
                 Nombre = x.nombre,
                 Descripcion = x.descripcion,
                 Condicion = x.condicion
-            });
+            }).OrderByDescending(x=>x.Condicion);
         }
 
         // GET: Categorias/Details/5
@@ -47,100 +47,116 @@ namespace AspNetCoreVueJS.Controllers
             return Ok(new CategoriaViewModel() { CategoriaID = categorias.idcategoria, Nombre = categorias.nombre, Descripcion = categorias.descripcion, Condicion = categorias.condicion});
         }
 
-        // GET: Categorias/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("idcategoria,Name,Description,Condition")] CCategoria cCategoria)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create([FromBody] CrearViewModel cCategoria)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cCategoria);
-                await _context.SaveChangesAsync();
-                return null;
+                var categoria = new CCategoria()
+                {
+                    nombre = cCategoria.nombre,
+                    descripcion = cCategoria.descripcion,
+                    condicion = true
+                };
+                _context.Add(categoria);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception es)
+                {
+                    return BadRequest();
+                }
+                return Ok();
             }
-            return View(cCategoria);
-        }
-
-        // GET: Categorias/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cCategoria = await _context.categorias.FindAsync(id);
-            if (cCategoria == null)
-            {
-                return NotFound();
-            }
-            return View(cCategoria);
+            return BadRequest();
         }
 
         // POST: Categorias/Edit/5
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Edit(int id, [Bind("idcategoria,Name,Description,Condition")] CCategoria cCategoria)
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Edit([FromBody]ActualizarViewModel cCategoria)
         {
-            if (id != cCategoria.idcategoria)
+            if (!ModelState.IsValid || cCategoria.idcategoria <= 0)
+            {
+                return BadRequest();
+            }
+            var categoria = await _context.categorias.FirstOrDefaultAsync(x=>x.idcategoria == cCategoria.idcategoria);
+
+            if (categoria == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            categoria.nombre = cCategoria.nombre;
+            categoria.descripcion = cCategoria.descripcion;
+
+            try
             {
-                try
-                {
-                    _context.Update(cCategoria);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CCategoriaExists(cCategoria.idcategoria))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return null;
+                await _context.SaveChangesAsync();
             }
-            return View(cCategoria);
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
-        // GET: Categorias/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cCategoria = await _context.categorias
-                .FirstOrDefaultAsync(m => m.idcategoria == id);
-            if (cCategoria == null)
-            {
-                return NotFound();
-            }
-
-            return View(cCategoria);
-        }
 
         // POST: Categorias/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpDelete("[action]/{id}")]
+        public async Task<IActionResult> Delete([FromRoute]int id)
         {
-            var cCategoria = await _context.categorias.FindAsync(id);
-            _context.categorias.Remove(cCategoria);
-            await _context.SaveChangesAsync();
-            return null;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var categoria = await _context.categorias.FindAsync(id);
+            if (categoria == null)
+            {
+                return NotFound();
+            }
+
+            _context.categorias.Remove(categoria);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> ToggleActivation([FromRoute] int id)
+        {
+            if (!ModelState.IsValid || id <= 0)
+            {
+                return BadRequest();
+            }
+            var categoria = await _context.categorias.FirstOrDefaultAsync(x => x.idcategoria == id);
+
+            if (categoria == null)
+            {
+                return NotFound();
+            }
+
+            categoria.condicion = categoria.condicion ?  false : true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
         private bool CCategoriaExists(int id)
