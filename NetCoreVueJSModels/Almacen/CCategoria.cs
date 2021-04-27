@@ -15,6 +15,8 @@ namespace NetCoreVueJSModels.Almacen
         [MaxLength(256)]
         public string descripcion { get; set; }
         public bool condicion { get; set; }
+
+        public ICollection<CArticulo> articulos { get; set; }
     }
 
 }

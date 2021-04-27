@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NetCoreVueJSData.Mapping
+namespace NetCoreVueJSData.Mapping.Almacen
 {
     public class CategoriaMap : IEntityTypeConfiguration<CCategoria>
     {
