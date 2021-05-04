@@ -67,6 +67,96 @@ namespace AspNetCoreVueJS.Controllers
         }
 
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create([FromBody] CreateProductViewModel cArticulo)
+        {
+            if (ModelState.IsValid)
+            {
+                var Articulo = new CArticulo()
+                {
+                    idcategoria = cArticulo.idcategoria,
+                    codigo = cArticulo.codigo,
+                    nombre = cArticulo.nombre,
+                    descripcion = cArticulo.descripcion,
+                    condicion = true,
+                    precio_venta = cArticulo.precio_venta,
+                    stock = cArticulo.stock
+                };
+                _context.articulos.Add(Articulo);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception es)
+                {
+                    return BadRequest();
+                }
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Edit([FromBody] UpdateProductViewModel cArticulo)
+        {
+            if (!ModelState.IsValid || cArticulo.idarticulo <= 0)
+            {
+                return BadRequest();
+            }
+            var articulo = await _context.articulos.FirstOrDefaultAsync(x => x.idarticulo == cArticulo.idarticulo);
+
+            if (articulo == null)
+            {
+                return NotFound();
+            }
+
+            articulo.idcategoria = cArticulo.idcategoria;
+            articulo.codigo = cArticulo.codigo;
+            articulo.nombre = cArticulo.nombre;
+            articulo.precio_venta = cArticulo.precio_venta;
+            articulo.stock = cArticulo.stock;
+            articulo.descripcion = cArticulo.descripcion;
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> ToggleActivation([FromRoute] int id)
+        {
+            if (!ModelState.IsValid || id <= 0)
+            {
+                return BadRequest();
+            }
+            var articulo = await _context.articulos.FirstOrDefaultAsync(x => x.idarticulo == id);
+
+            if (articulo == null)
+            {
+                return NotFound();
+            }
+
+            articulo.condicion = articulo.condicion ? false : true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
 
         private bool CArticuloExists(int id)
         {
