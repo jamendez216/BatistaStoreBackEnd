@@ -13,11 +13,11 @@ namespace AspNetCoreVueJS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CArticulosController : ControllerBase
+    public class ArticulosController : ControllerBase
     {
         private readonly DBContextSys _context;
 
-        public CArticulosController(DBContextSys context)
+        public ArticulosController(DBContextSys context)
         {
             _context = context;
         }
