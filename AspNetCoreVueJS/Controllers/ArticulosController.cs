@@ -30,7 +30,7 @@ namespace AspNetCoreVueJS.Controllers
             {
                 idarticulo = x.idarticulo,
                 idcategoria = x.idcategoria,
-                categoria = x.Categoria.descripcion,
+                categoria = x.Categoria.nombre,
                 codigo = x.codigo,
                 nombre = x.nombre,
                 descripcion = x.descripcion,
