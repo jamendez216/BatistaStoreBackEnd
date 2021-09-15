@@ -34,6 +34,21 @@ namespace AspNetCoreVueJS.Controllers
             }).OrderByDescending(x=>x.Condicion);
         }
 
+        // Summary:
+        //      Get a value List for all categories that are enabled at the moment
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<(int id, string name)>> GetValList()
+        {
+            var categorias = await _context.categorias.Where(x=>x.condicion).ToListAsync();
+            var res = categorias.Select(x =>
+                (
+                    id:  x.idcategoria,
+                    name: x.nombre
+                 ))
+                .OrderBy(x => x.name);
+            return res;
+        }
+
         // GET: Categorias/Details/5
 
         [HttpGet("[action]/{id}")]
