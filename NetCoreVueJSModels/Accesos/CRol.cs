@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -14,5 +15,7 @@ namespace NetCoreVueJSModels.Accesos
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Description value must be between 3 and 100 characters")]
         public string descripcion { get; set; }
         public bool condicion { get; set; }
+        [JsonIgnore]
+        public ICollection<CUsuario> usuarios { get; set; }
     }
 }

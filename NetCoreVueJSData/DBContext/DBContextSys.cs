@@ -18,7 +18,8 @@ namespace NetCoreVueJSData.DBContext
         }
         public DbSet<CCategoria> categorias { get; set; }
         public DbSet<CArticulo> articulos { get; set; }
-        public DbSet<CRol> roles{ get; set; }
+        public DbSet<CRol> roles { get; set; }
+        public DbSet<CUsuario> usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,7 @@ namespace NetCoreVueJSData.DBContext
             modelBuilder.ApplyConfiguration(new CategoriaMap());
             modelBuilder.ApplyConfiguration(new ArticuloMap());
             modelBuilder.ApplyConfiguration(new RolMap());
+            modelBuilder.ApplyConfiguration(new UsuarioMap());
         }
 
     }
