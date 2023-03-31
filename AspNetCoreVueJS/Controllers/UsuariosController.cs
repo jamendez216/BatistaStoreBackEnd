@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AspNetCoreVueJS.Models.Accesos.Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -155,7 +154,7 @@ namespace AspNetCoreVueJS.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-
+            return Ok();
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
