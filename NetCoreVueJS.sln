@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31019.35
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreVueJSData", "NetCoreVueJSData\NetCoreVueJSData.csproj", "{C1589293-9181-4030-B254-154C07DAC0A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreVueJSModels", "NetCoreVueJSModels\NetCoreVueJSModels.csproj", "{D04A6676-0EBB-4FA3-B629-FA3F6DE17864}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreVueJS", "AspNetCoreVueJS\AspNetCoreVueJS.csproj", "{55C30240-FFB1-42FE-8BF0-C9454E4A0CEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreVueJS", "AspNetCoreVueJS\AspNetCoreVueJS.csproj", "{55C30240-FFB1-42FE-8BF0-C9454E4A0CEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreVueJSBusiness", "NetCoreVueJSBusiness\NetCoreVueJSBusiness.csproj", "{876E6593-261A-44E8-AA69-1B1515824EFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{55C30240-FFB1-42FE-8BF0-C9454E4A0CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55C30240-FFB1-42FE-8BF0-C9454E4A0CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55C30240-FFB1-42FE-8BF0-C9454E4A0CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{876E6593-261A-44E8-AA69-1B1515824EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{876E6593-261A-44E8-AA69-1B1515824EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{876E6593-261A-44E8-AA69-1B1515824EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{876E6593-261A-44E8-AA69-1B1515824EFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

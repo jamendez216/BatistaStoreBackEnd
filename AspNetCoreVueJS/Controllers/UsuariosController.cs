@@ -154,6 +154,7 @@ namespace AspNetCoreVueJS.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            
             return Ok();
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
