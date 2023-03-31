@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AspNetCoreVueJS.Models.Almacen.Categoria
+namespace NetCoreVueJSModels.Models.Almacen.Categoria
 {
     public class CategoriaViewModel
     {

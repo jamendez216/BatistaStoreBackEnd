@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AspNetCoreVueJS.Models.Almacen.Articulo
+namespace NetCoreVueJSModels.Models.Almacen.Articulo
 {
     public class UpdateProductViewModel
     {

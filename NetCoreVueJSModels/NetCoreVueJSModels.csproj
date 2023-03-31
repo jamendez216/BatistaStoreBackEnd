@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Ventas\" />
+    <Folder Include="ViewModels\Ventas\" />
   </ItemGroup>
 
   <ItemGroup>

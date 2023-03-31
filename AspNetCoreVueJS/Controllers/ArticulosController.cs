@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AspNetCoreVueJS.Models.Almacen.Articulo;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetCoreVueJSData.DBContext;
 using NetCoreVueJSModels.Almacen;
+using NetCoreVueJSModels.Models.Almacen.Articulo;
 
 namespace AspNetCoreVueJS.Controllers
 {
