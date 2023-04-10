@@ -9,4 +9,8 @@
     <Folder Include="Warehouse\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NetCoreVueJSData\NetCoreVueJSData.csproj" />
+  </ItemGroup>
+
 </Project>

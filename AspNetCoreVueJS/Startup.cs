@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NetCoreVueJSBusiness.Interfaces;
 using NetCoreVueJSData.DBContext;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace AspNetCoreVueJS
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<DBContextSys>(op => op.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            
             services.AddCors(Options =>
                 Options.AddPolicy("CorsPolicy",
                 builder => builder.AllowAnyOrigin()

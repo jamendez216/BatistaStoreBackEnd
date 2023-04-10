@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NetCoreVueJSBusiness\NetCoreVueJSBusiness.csproj" />
     <ProjectReference Include="..\NetCoreVueJSData\NetCoreVueJSData.csproj" />
     <ProjectReference Include="..\NetCoreVueJSModels\NetCoreVueJSModels.csproj" />
   </ItemGroup>
