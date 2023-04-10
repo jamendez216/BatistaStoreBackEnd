@@ -14,7 +14,7 @@ namespace AspNetCoreVueJS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuariosController : ControllerBase
+    public class UsuariosController : BaseController
     {
         private readonly IUsersService service;
 
@@ -92,14 +92,5 @@ namespace AspNetCoreVueJS.Controllers
             return Ok();
         }
 
-
-        private IActionResult HandleException(Exception e)
-        {
-            if (e.Message.Contains("Not Found"))
-            {
-                return NotFound();
-            }
-            return BadRequest();
-        }
     }
 }
