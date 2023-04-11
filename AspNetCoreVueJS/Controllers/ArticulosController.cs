@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NetCoreVueJSBusiness.Interfaces;
 using NetCoreVueJSData.DBContext;
 using NetCoreVueJSModels.Almacen;
 using NetCoreVueJSModels.Models.Almacen.Articulo;
@@ -13,32 +14,29 @@ namespace AspNetCoreVueJS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ArticulosController : ControllerBase
+    public class ArticulosController : BaseController
     {
         private readonly DBContextSys _context;
+        private readonly IProductService service;
 
-        public ArticulosController(DBContextSys context)
+        public ArticulosController(DBContextSys context, IProductService service)
         {
             _context = context;
+            this.service = service;
         }
 
         [HttpGet("[action]")]
         public async Task<IEnumerable<ArticuloViewModel>> Get()
         {
-            var categorias = await _context.articulos.Include(a=>a.Categoria).ToListAsync();
-            return categorias.Select(x => new ArticuloViewModel
+            try
             {
-                idarticulo = x.idarticulo,
-                idcategoria = x.idcategoria,
-                categoria = x.Categoria.nombre,
-                codigo = x.codigo,
-                nombre = x.nombre,
-                descripcion = x.descripcion,
-                stock = x.stock,
-                precio_venta = x.precio_venta,
-                condicion = x.condicion
-
-            }).OrderByDescending(x => x.condicion);
+                return await service.GetAll();
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+                throw;
+            }
         }
 
         // GET: Categorias/Details/5
@@ -46,24 +44,21 @@ namespace AspNetCoreVueJS.Controllers
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Get(int? id)
         {
-            var articulo = await _context.articulos.Include(a=>a.Categoria)
-                .SingleOrDefaultAsync(x=>x.idarticulo == id);
-
-            if (articulo == null)
+            try
             {
-                return NotFound();
+                if (id.HasValue)
+                {
+                    var product = service.Get(id.Value);
+                    return Ok(product);
+                }
+                else
+                    return BadRequest();
             }
-            return Ok(new ArticuloViewModel() {
-                idarticulo = articulo.idarticulo,
-                idcategoria = articulo.idcategoria,
-                categoria = articulo.Categoria.descripcion,
-                codigo = articulo.codigo,
-                nombre = articulo.nombre,
-                descripcion = articulo.descripcion,
-                stock = articulo.stock,
-                precio_venta = articulo.precio_venta,
-                condicion = articulo.condicion
-            });
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            
         }
 
 
@@ -72,26 +67,16 @@ namespace AspNetCoreVueJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var Articulo = new CArticulo()
-                {
-                    idcategoria = cArticulo.idcategoria,
-                    codigo = cArticulo.codigo,
-                    nombre = cArticulo.nombre,
-                    descripcion = cArticulo.descripcion,
-                    condicion = true,
-                    precio_venta = cArticulo.precio_venta,
-                    stock = cArticulo.stock
-                };
-                _context.articulos.Add(Articulo);
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await service.Create(cArticulo);
+                    return Ok();
                 }
-                catch (Exception es)
+                catch (Exception ex)
                 {
-                    return BadRequest();
+                    return HandleException(ex);
                 }
-                return Ok();
+                
             }
             return BadRequest();
         }
@@ -103,30 +88,16 @@ namespace AspNetCoreVueJS.Controllers
             {
                 return BadRequest();
             }
-            var articulo = await _context.articulos.FirstOrDefaultAsync(x => x.idarticulo == cArticulo.idarticulo);
-
-            if (articulo == null)
-            {
-                return NotFound();
-            }
-
-            articulo.idcategoria = cArticulo.idcategoria;
-            articulo.codigo = cArticulo.codigo;
-            articulo.nombre = cArticulo.nombre;
-            articulo.precio_venta = cArticulo.precio_venta;
-            articulo.stock = cArticulo.stock;
-            articulo.descripcion = cArticulo.descripcion;
-            
             try
             {
-                await _context.SaveChangesAsync();
+                await service.Edit(cArticulo);
+                return Ok();
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return HandleException(e);
             }
 
-            return Ok();
         }
 
         [HttpPost("[action]/{id}")]
@@ -136,31 +107,17 @@ namespace AspNetCoreVueJS.Controllers
             {
                 return BadRequest();
             }
-            var articulo = await _context.articulos.FirstOrDefaultAsync(x => x.idarticulo == id);
-
-            if (articulo == null)
-            {
-                return NotFound();
-            }
-
-            articulo.condicion = articulo.condicion ? false : true;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await service.ToggleActivation(id);
+                return Ok();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return HandleException(ex);
             }
 
-            return Ok();
-        }
-
-
-        private bool CArticuloExists(int id)
-        {
-            return _context.articulos.Any(e => e.idarticulo == id);
         }
     }
 }
