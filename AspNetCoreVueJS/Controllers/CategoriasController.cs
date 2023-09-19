@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NetCoreVueJSBusiness.Interfaces;
 using NetCoreVueJSData.DBContext;
 using NetCoreVueJSModels.Almacen;
 using NetCoreVueJSModels.Models.Almacen.Categoria;
+using NetCoreVueJSModels.ViewModels.Almacen.Categoria;
 
 namespace AspNetCoreVueJS.Controllers
 {
@@ -16,37 +18,25 @@ namespace AspNetCoreVueJS.Controllers
     public class CategoriasController : Controller
     {
         private readonly DBContextSys _context;
+        private readonly ICategoryService service;
 
-        public CategoriasController(DBContextSys context)
+        public CategoriasController(ICategoryService service)
         {
-            _context = context;
+            this.service = service;
         }
         [HttpGet("[action]")]
         public async Task<IEnumerable<CategoriaViewModel>> Get()
         {
-            var categorias = await _context.categorias.ToListAsync();
-            return categorias.Select(x => new CategoriaViewModel
-            {
-                CategoriaID = x.idcategoria,
-                Nombre = x.nombre,
-                Descripcion = x.descripcion,
-                Condicion = x.condicion
-            }).OrderByDescending(x=>x.Condicion);
+            return await service.Get();
+            
         }
 
         // Summary:
         //      Get a value List for all categories that are enabled at the moment
         [HttpGet("[action]")]
-        public async Task<IEnumerable<(int id, string name)>> GetValList()
+        public async Task<IEnumerable<CategoryValueListModel>> GetValList()
         {
-            var categorias = await _context.categorias.Where(x=>x.condicion).ToListAsync();
-            var res = categorias.Select(x =>
-                (
-                    id:  x.idcategoria,
-                    name: x.nombre
-                 ))
-                .OrderBy(x => x.name);
-            return res;
+            return await service.GetValList();
         }
 
         // GET: Categorias/Details/5
@@ -54,12 +44,12 @@ namespace AspNetCoreVueJS.Controllers
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Get(int? id)
         {
-            var categorias = await _context.categorias.FindAsync(id);
-            if (categorias == null)
+            var categoria = await service.Get(id);
+            if (categoria == null)
             {
                 return NotFound();
             }
-            return Ok(new CategoriaViewModel() { CategoriaID = categorias.idcategoria, Nombre = categorias.nombre, Descripcion = categorias.descripcion, Condicion = categorias.condicion});
+            return Ok(categoria);
         }
 
         [HttpPost("[action]")]
@@ -67,22 +57,15 @@ namespace AspNetCoreVueJS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var categoria = new CCategoria()
-                {
-                    nombre = cCategoria.nombre,
-                    descripcion = cCategoria.descripcion,
-                    condicion = true
-                };
-                _context.Add(categoria);
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await service.Create(cCategoria);
+                    return Ok();
                 }
-                catch (Exception es)
+                catch (Exception ex)
                 {
                     return BadRequest();
                 }
-                return Ok();
             }
             return BadRequest();
         }
@@ -95,24 +78,12 @@ namespace AspNetCoreVueJS.Controllers
             {
                 return BadRequest();
             }
-            var categoria = await _context.categorias.FirstOrDefaultAsync(x=>x.idcategoria == cCategoria.idcategoria);
-
-            if (categoria == null)
+            var categoryExists = await service.CategoryExists(cCategoria.idcategoria);
+            if (!categoryExists)
             {
                 return NotFound();
             }
-
-            categoria.nombre = cCategoria.nombre;
-            categoria.descripcion = cCategoria.descripcion;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
+            service.Edit(cCategoria);
 
             return Ok();
         }
@@ -122,28 +93,25 @@ namespace AspNetCoreVueJS.Controllers
         [HttpDelete("[action]/{id}")]
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var categoria = await _context.categorias.FindAsync(id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            _context.categorias.Remove(categoria);
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+                var categoryExists = await service.CategoryExists(id);
+                if (!categoryExists)
+                {
+                    return NotFound();
+                }
+                await service.Delete(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                throw;
             }
-            return Ok();
         }
 
         [HttpPost("[action]/{id}")]
@@ -153,30 +121,16 @@ namespace AspNetCoreVueJS.Controllers
             {
                 return BadRequest();
             }
-            var categoria = await _context.categorias.FirstOrDefaultAsync(x => x.idcategoria == id);
 
-            if (categoria == null)
+            var categoryExists = await service.CategoryExists(id);
+            if (!categoryExists)
             {
                 return NotFound();
             }
-
-            categoria.condicion = categoria.condicion ?  false : true;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
+            await service.ToggleActivation(id);
 
             return Ok();
         }
 
-        private bool CCategoriaExists(int id)
-        {
-            return _context.categorias.Any(e => e.idcategoria == id);
-        }
     }
 }

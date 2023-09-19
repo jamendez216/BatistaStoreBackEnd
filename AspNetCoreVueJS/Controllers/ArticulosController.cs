@@ -16,12 +16,10 @@ namespace AspNetCoreVueJS.Controllers
     [ApiController]
     public class ArticulosController : BaseController
     {
-        private readonly DBContextSys _context;
         private readonly IProductService service;
 
-        public ArticulosController(DBContextSys context, IProductService service)
+        public ArticulosController(IProductService service)
         {
-            _context = context;
             this.service = service;
         }
 
@@ -48,7 +46,7 @@ namespace AspNetCoreVueJS.Controllers
             {
                 if (id.HasValue)
                 {
-                    var product = service.Get(id.Value);
+                    var product = await service.Get(id.Value);
                     return Ok(product);
                 }
                 else

@@ -36,7 +36,7 @@ namespace AspNetCoreVueJS.Controllers
             {
                 try
                 {
-                    service.Create(model);
+                    await service.Create(model);
                     return Ok();
                 }
                 catch (Exception ex)
@@ -76,7 +76,7 @@ namespace AspNetCoreVueJS.Controllers
             
             try
             {
-                service.ToggleActivation(id);
+                await service.ToggleActivation(id);
             }
             catch (Exception e)
             {
