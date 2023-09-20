@@ -15,7 +15,6 @@ namespace NetCoreVueJSModels.Models.Almacen.Articulo
         public string codigo { get; set; }
         [StringLength(50, MinimumLength = 3, ErrorMessage = "This property has a max length of 50 and a minimum of 3")]
         public string nombre{ get; set; }
-        [Required]
         public decimal precio_venta{ get; set; }
         [Required]
         public int stock { get; set; }

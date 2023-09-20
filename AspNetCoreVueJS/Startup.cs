@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NetCoreVueJSBusiness.Access;
 using NetCoreVueJSBusiness.Interfaces;
 using NetCoreVueJSBusiness.Warehouse;
 using NetCoreVueJSData.DataAccess;
@@ -31,13 +32,15 @@ namespace AspNetCoreVueJS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<DBContextSys>(op => op.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductData, ProductData>();
             services.AddScoped<ICategoryData, CategoryData>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IUsersData, UsersData>();
             services.AddCors(Options =>
                 Options.AddPolicy("CorsPolicy",
                 builder => builder.AllowAnyOrigin()
