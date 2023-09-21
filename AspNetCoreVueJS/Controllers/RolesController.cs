@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NetCoreVueJSBusiness.Interfaces;
 using NetCoreVueJSData.DBContext;
 using NetCoreVueJSModels.Accesos;
 using NetCoreVueJSModels.Models.Usuarios;
@@ -15,25 +16,19 @@ namespace AspNetCoreVueJS.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly DBContextSys _context;
+        private readonly IRolService service;
 
-        public RolesController(DBContextSys context)
+        public RolesController(IRolService service)
         {
-            _context = context;
+            this.service = service;
         }
 
         // GET: api/Roles/Get
         [HttpGet("[action]")]
         public async Task<IEnumerable<RolViewModel>> Get()
         {
-            var rolees = await _context.roles.ToListAsync();
-            return rolees.Select(x => new RolViewModel
-            {
-                idrol = x.idrol,
-                condicion = x.condicion,
-                descripcion = x.descripcion,
-                nombre = x.nombre
-            }).OrderByDescending(x => x.condicion);
+            return await service.Get();
+
         }
 
         // Summary:
@@ -41,20 +36,8 @@ namespace AspNetCoreVueJS.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<SelectRolViewModel>> GetValList()
         {
-            var roles = await _context.roles.Where(x => x.condicion).ToListAsync();
-            var res = roles.Select( x=>  new SelectRolViewModel
-            {
-                idrol = x.idrol,
-                nombre = x.nombre
-
-            }).OrderBy(x => x.nombre);
-            return res;
+            return await service.GetValList();
         }
 
-
-        private bool CRolExists(int id)
-        {
-            return _context.roles.Any(e => e.idrol == id);
-        }
     }
 }

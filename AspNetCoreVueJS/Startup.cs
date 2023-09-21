@@ -41,6 +41,8 @@ namespace AspNetCoreVueJS
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IUsersData, UsersData>();
+            services.AddScoped<IRolService, RolService>();
+            services.AddScoped<IRolData, RolData>();
             services.AddCors(Options =>
                 Options.AddPolicy("CorsPolicy",
                 builder => builder.AllowAnyOrigin()
