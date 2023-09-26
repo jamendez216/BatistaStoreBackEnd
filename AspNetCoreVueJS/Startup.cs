@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NetCoreVueJSBusiness.Access;
 using NetCoreVueJSBusiness.Interfaces;
+using NetCoreVueJSBusiness.Sales;
 using NetCoreVueJSBusiness.Warehouse;
 using NetCoreVueJSData.DataAccess;
 using NetCoreVueJSData.DBContext;
@@ -43,6 +44,8 @@ namespace AspNetCoreVueJS
             services.AddScoped<IUsersData, UsersData>();
             services.AddScoped<IRolService, RolService>();
             services.AddScoped<IRolData, RolData>();
+            services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<ISubjectData, SubjectData>();
             services.AddCors(Options =>
                 Options.AddPolicy("CorsPolicy",
                 builder => builder.AllowAnyOrigin()
