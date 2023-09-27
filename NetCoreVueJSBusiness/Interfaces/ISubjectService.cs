@@ -11,6 +11,6 @@ namespace NetCoreVueJSBusiness.Interfaces
         Task<IEnumerable<SubjectViewModel>> GetClients();
         Task<IEnumerable<SubjectViewModel>> GetProviders();
         Task Create(CreateSubjectViewModel viewModel);
-        Task Edit(UpdateSubjectViewModel);
+        Task Edit(UpdateSubjectViewModel model);
     }
 }
